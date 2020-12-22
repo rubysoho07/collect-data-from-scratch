@@ -16,7 +16,7 @@ EXPOSE 2181 2888 3888
 RUN mkdir -p /data
 
 # Copy Zookeeper configuration file
-COPY zookeeper.cfg /zookeeper/conf/
+COPY zoo.cfg /zookeeper/conf/
 
 # Write /data/myid file (Default: 1)
 RUN echo ${ZOOKEEPER_ID:-1} > /data/myid
