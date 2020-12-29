@@ -17,6 +17,56 @@ docker push [Docker Hub ID]/cdfs-zookeeper:latest
 ```
 ### Kafka 이미지 빌드
 
+```shell script
+cd kafka/
+docker login
+docker build -t cdfs-kafka .
+docker tag -t cdfs-kafka [Docker Hub ID]/cdfs-kafka:latest
+docker push [Docker Hub ID]/cdfs-kafka:latest
+```
+## 로컬에서 테스트하기
+
+컨테이너 간 통신을 위해 [User-defined Bridge Network](https://docs.docker.com/network/network-tutorial-standalone/)를 이용합니다. 
+
+아래 명령으로 ZooKeeper와 Kafka 컨테이너를 올립니다. 
+
+```shell script
+docker network create --driver bridge cdfs-network
+docker run -d -e STANDALONE_MODE=yes --network cdfs-network --name zookeeper cdfs-zookeeper
+docker run -d -e STANDALONE_MODE=yes --network cdfs-network --name kafka cdfs-kafka
+```
+
+그러면 먼저 Topic을 만들고, 이벤트를 한 번 보내 봅시다. ([Kafka Quickstart을 참조했습니다.](https://kafka.apache.org/quickstart))
+
+```shell script
+docker exec -it kafka bash
+root@02c750bdca04:/kafka# cd kafka_2.13-2.6.0
+root@02c750bdca04:/kafka/kafka_2.13-2.6.0# bin/kafka-topics.sh --create --topic quickstart-events --bootstrap-server localhost:9092
+Created topic quickstart-events.
+root@02c750bdca04:/kafka/kafka_2.13-2.6.0# bin/kafka-console-producer.sh --topic quickstart-events --bootstrap-server localhost:9092
+>first
+>second
+```
+
+다른 터미널 창에서 다음과 같이 입력해서 이벤트를 읽어봅시다. 
+
+```shell script
+docker exec -it kafka bash
+root@02c750bdca04:/kafka# cd kafka_2.13-2.6.0
+root@02c750bdca04:/kafka/kafka_2.13-2.6.0# bin/kafka-console-consumer.sh --topic quickstart-events --from-beginning --bootstrap-server localhost:9092
+first
+second
+```
+
+종료하려면 Ctrl+C를 누른 뒤, exit 명령을 입력합니다.
+
+### 정리하기
+
+```shell script
+docker stop zookeeper kafka
+docker rm zookeeper kafka
+docker network rm cdfs-network
+```
 
 ## Kubernetes로 배포하기
 
