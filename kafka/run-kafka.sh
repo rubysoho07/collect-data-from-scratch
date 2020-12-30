@@ -17,4 +17,7 @@ else
     sed -i 's/zookeeper.connect=localhost:2181/zookeeper.connect=zookeeper-0.zookeeper.default.svc.cluster.local:2181,zookeeper-1.zookeeper.default.svc.cluster.local:2181,zookeeper-2.zookeeper.default.svc.cluster.local:2181/' config/server.properties
 fi
 
+# Remove unnecessary files of /data (Log file directory)
+rm -rf /data
+
 bin/kafka-server-start.sh config/server.properties
