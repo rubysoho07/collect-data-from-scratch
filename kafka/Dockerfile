@@ -8,6 +8,9 @@ RUN apt-get update -qq && apt-get install wget -y -qq && \
     tar -zxf kafka_2.13-2.6.0.tgz && \
     cd kafka_2.13-2.6.0
 
+# Make directory for storing log
+RUN mkdir -p /data
+
 # Copy script to run Kafka
 COPY run-kafka.sh .
 
