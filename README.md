@@ -12,7 +12,7 @@
 cd zookeeper/
 docker login
 docker build -t cdfs-zookeeper . 
-docker tag -t cdfs-zookeeper [Docker Hub ID]/cdfs-zookeeper:latest
+docker tag cdfs-zookeeper [Docker Hub ID]/cdfs-zookeeper:latest
 docker push [Docker Hub ID]/cdfs-zookeeper:latest
 ```
 ### Kafka 이미지 빌드
@@ -21,7 +21,7 @@ docker push [Docker Hub ID]/cdfs-zookeeper:latest
 cd kafka/
 docker login
 docker build -t cdfs-kafka .
-docker tag -t cdfs-kafka [Docker Hub ID]/cdfs-kafka:latest
+docker tag cdfs-kafka [Docker Hub ID]/cdfs-kafka:latest
 docker push [Docker Hub ID]/cdfs-kafka:latest
 ```
 ## 로컬에서 테스트하기
@@ -123,6 +123,40 @@ world
 2020-12-29 09:05:42,849 [myid:] - ERROR [main:ServiceUtils@42] - Exiting JVM with code 0
 ```
 
+### Kakfa 배포하기
+
+```shell script
+cd k8s_config
+kubectl apply -f kafka-service.yaml
+```
+
+#### 정상 작동 확인하기
+
+* (참고) 아래에서 설명하는 내용은 minikube에서 돌리기에 부족할 수 있습니다. 참고로 보시기를 권장하며, 실제로 테스트 하시려면 Kubernetes 클러스터를 올려서 테스트 해 보시기 바랍니다. (비용이 부과될 수 있음)
+
+먼저 Kafka Pod 중 하나를 선택해서 Topic을 만들고, Producer 역할로서 메시지를 보내 봅니다.
+
+```shell script
+kubectl exec -it kafka-0 -- bash
+root@kafka-0:/kafka# cd kafka_2.13-2.6.0
+root@kafka-0:/kafka/kafka_2.13-2.6.0# bin/kafka-topics.sh --create --topic quickstart-events --bootstrap-server `hostname -f`:9092 --replication-factor 3 --partitions 20
+Created topic quickstart-events.
+root@kafka-0:/kafka/kafka_2.13-2.6.0# bin/kafka-console-producer.sh --topic quickstart-events --bootstrap-server `hostname -f`:9092
+>message 1
+>message 2
+```
+
+그리고 다른 터미널을 실행해서, 다른 Kafka Pod에서 Consumer 역할을 수행해 봅니다. 
+
+```shell script
+kubectl exec -it kafka-1 -- bash
+root@kafka-1:/kafka# cd kafka_2.13-2.6.0
+root@kafka-1:/kafka/kafka_2.13-2.6.0# bin/kafka-console-consumer.sh --topic quickstart-events --from-beginning --bootstrap-server `hostname -f`:9092
+message 1
+message 2
+```
+
+위 결과에서 확인할 수 있듯이, 메시지를 잘 받고 있네요.
 ## 참고자료
 
 ### Kubernetes 문서
