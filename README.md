@@ -157,6 +157,29 @@ message 2
 ```
 
 위 결과에서 확인할 수 있듯이, 메시지를 잘 받고 있네요.
+
+## Producer 생성 및 테스트 (로컬에서)
+
+먼저 Docker 이미지를 생성하는 과정은 다음과 같습니다.
+
+```shell script
+docker build -t cdfs-kafka-producer .
+docker run -d -e STANDALONE_MODE=yes -p 5000:5000 --network cdfs-network --name cdfs-kafka-producer cdfs-kafka-producer
+```
+
+**로컬에서 테스트하기** 항목을 참고하여 `test-topic` Topic을 생성하고, Producer 역할을 할 컨테이너를 실행합니다.
+
+```shell script
+docker run -d -e STANDALONE_MODE=yes -p 5000:5000 --network cdfs-network --name cdfs-kafka-producer cdfs-kafka-producer
+```
+
+그리고 테스트 데이터를 넣어 봅시다. 아래와 같이 랜덤 메시지를 볼 수 있습니다. 
+
+```shell script
+curl -X POST localhost:5000/upload
+{"eventTime":"2021-01-04T12:26:43.720","message":"Random Message: 97"}
+```
+
 ## 참고자료
 
 ### Kubernetes 문서
