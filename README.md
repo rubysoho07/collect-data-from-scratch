@@ -163,8 +163,8 @@ message 2
 먼저 Docker 이미지를 생성하는 과정은 다음과 같습니다.
 
 ```shell script
+cd producer
 docker build -t cdfs-kafka-producer .
-docker run -d -e STANDALONE_MODE=yes -p 5000:5000 --network cdfs-network --name cdfs-kafka-producer cdfs-kafka-producer
 ```
 
 **로컬에서 테스트하기** 항목을 참고하여 `test-topic` Topic을 생성하고, Producer 역할을 할 컨테이너를 실행합니다.
@@ -180,6 +180,55 @@ curl -X POST localhost:5000/upload
 {"eventTime":"2021-01-04T12:26:43.720","message":"Random Message: 97"}
 ```
 
+## Consumer 생성 및 테스트 (로컬에서)
+
+이 예제에서 Consumer는 10개의 데이터를 모으면 AWS S3 버킷에 데이터를 저장합니다.
+
+먼저 Docker 이미지를 생성하는 과정은 다음과 같습니다. 
+
+```shell script
+cd consumer
+docker build -t cdfs-kafka-consumer .
+```
+
+위의 과정들(Zookeeper & Kafka 컨테이너 올라감, Topic 생성, Producer 컨테이너 올라감)이 다 끝나면, Consumer 컨테이너를 올려봅니다. 
+
+```shell script
+docker run -e STANDALONE_MODE='yes' \
+-e AWS_ACCESS_KEY_ID='<AWS Access Key>' \
+-e AWS_SECRET_ACCESS_KEY='<AWS Secret Access Key>' \
+-e AWS_DEFAULT_REGION='<AWS Region Name>' \
+-e S3_BUCKET_NAME='<your-s3-bucket-name>' \
+--network cdfs-network --name kafka-consumer cdfs-kafka-consumer
+```
+
+10번씩 데이터를 올릴 때마다 AWS S3에 저장을 하는데요. 데이터가 저장되어 있는지 확인해 볼까요?
+
+```shell script
+aws s3 ls s3://<your-s3-bucket-name>
+2021-01-05 21:24:04        750 44cdc9d3-8afb-42fb-8305-8166049d90fd
+2021-01-05 21:24:08        749 61874ecf-08d9-415c-b1dc-bebc74c9f12e
+```
+
+데이터가 들어온 것을 확인할 수 있습니다. 그리고 임의의 파일을 받아서 한 번 내용을 보면...
+
+```shell script
+$ aws s3 cp s3://<your-s3-bucket-name>/44cdc9d3-8afb-42fb-8305-8166049d90fd result_file.txt
+download: s3://<your-s3-bucket-name>/44cdc9d3-8afb-42fb-8305-8166049d90fd to ./result_file.txt
+$ cat result_file.txt 
+{"message": "Random Message: 233", "eventTime": "2021-01-05T12:23:58.577"}
+{"message": "Random Message: 387", "eventTime": "2021-01-05T12:23:59.384"}
+{"message": "Random Message: 846", "eventTime": "2021-01-05T12:23:59.804"}
+{"message": "Random Message: 508", "eventTime": "2021-01-05T12:24:00.328"}
+{"message": "Random Message: 230", "eventTime": "2021-01-05T12:24:00.758"}
+{"message": "Random Message: 686", "eventTime": "2021-01-05T12:24:01.214"}
+{"message": "Random Message: 791", "eventTime": "2021-01-05T12:24:01.647"}
+{"message": "Random Message: 792", "eventTime": "2021-01-05T12:24:02.079"}
+{"message": "Random Message: 768", "eventTime": "2021-01-05T12:24:02.504"}
+{"message": "Random Message: 349", "eventTime": "2021-01-05T12:24:02.924"}
+```
+
+데이터가 들어와 있는 것을 확인할 수 있습니다.
 ## 참고자료
 
 ### Kubernetes 문서
