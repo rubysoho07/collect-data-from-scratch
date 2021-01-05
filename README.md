@@ -170,7 +170,7 @@ docker build -t cdfs-kafka-producer .
 **로컬에서 테스트하기** 항목을 참고하여 `test-topic` Topic을 생성하고, Producer 역할을 할 컨테이너를 실행합니다.
 
 ```shell script
-docker run -d -e STANDALONE_MODE=yes -p 5000:5000 --network cdfs-network --name cdfs-kafka-producer cdfs-kafka-producer
+docker run -d -e STANDALONE_MODE=yes -p 5000:5000 --network cdfs-network --name kafka-producer cdfs-kafka-producer
 ```
 
 그리고 테스트 데이터를 넣어 봅시다. 아래와 같이 랜덤 메시지를 볼 수 있습니다. 
@@ -194,7 +194,7 @@ docker build -t cdfs-kafka-consumer .
 위의 과정들(Zookeeper & Kafka 컨테이너 올라감, Topic 생성, Producer 컨테이너 올라감)이 다 끝나면, Consumer 컨테이너를 올려봅니다. 
 
 ```shell script
-docker run -e STANDALONE_MODE='yes' \
+docker run -d -e STANDALONE_MODE='yes' \
 -e AWS_ACCESS_KEY_ID='<AWS Access Key>' \
 -e AWS_SECRET_ACCESS_KEY='<AWS Secret Access Key>' \
 -e AWS_DEFAULT_REGION='<AWS Region Name>' \
