@@ -5,11 +5,19 @@ import boto3
 
 from kafka import KafkaConsumer
 
+def _validate_env(value):
+    """ Validation of environment variable. If valid, return True """
+
+    if value in ["", None, "undefined", "null", "None"]:
+        return False
+
+    return True
+
 
 def get_s3_client():
     """ Get S3 Client from config """
 
-    if 'S3_ENDPOINT' in os.environ.keys():
+    if 'S3_ENDPOINT' in os.environ.keys() and _validate_env(os.environ.get('S3_ENDPOINT')) is True:
         # For S3 Compatible Storage
         client = boto3.client('s3', endpoint_url=os.environ.get('S3_ENDPOINT'))
     else:
