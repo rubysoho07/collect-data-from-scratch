@@ -2,9 +2,13 @@ FROM python:3.8-slim
 
 WORKDIR /producer
 
-COPY requirements.txt api.py /producer/
+COPY requirements.txt /producer
 
 RUN pip install -r requirements.txt 
+
+COPY api.py /producer
+
+ENV PYTHONUNBUFFERED=1
 
 EXPOSE 5000
 
