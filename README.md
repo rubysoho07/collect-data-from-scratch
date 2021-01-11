@@ -160,11 +160,13 @@ message 2
 
 ## Producer 생성 및 테스트 (로컬에서)
 
-먼저 Docker 이미지를 생성하는 과정은 다음과 같습니다.
+먼저 Docker 이미지를 생성하는 과정은 다음과 같습니다. (로컬에서만 테스트하려면 `docker tag`, `docker push`는 안 하셔도 됩니다.)
 
 ```shell script
 cd producer
 docker build -t cdfs-kafka-producer .
+docker tag cdfs-kafka-producer hahafree12/cdfs-kafka-producer
+docker push hahafree12/cdfs-kafka-producer
 ```
 
 **로컬에서 테스트하기** 항목을 참고하여 `test-topic` Topic을 생성하고, Producer 역할을 할 컨테이너를 실행합니다.
@@ -184,11 +186,13 @@ curl -X POST localhost:5000/upload
 
 이 예제에서 Consumer는 10개의 데이터를 모으면 AWS S3 버킷에 데이터를 저장합니다.
 
-먼저 Docker 이미지를 생성하는 과정은 다음과 같습니다. 
+먼저 Docker 이미지를 생성하는 과정은 다음과 같습니다. (로컬에서만 테스트하려면 `docker tag`, `docker push`는 안 하셔도 됩니다.)
 
 ```shell script
 cd consumer
 docker build -t cdfs-kafka-consumer .
+docker tag cdfs-kafka-consumer hahafree12/cdfs-kafka-consumer
+docker push hahafree12/cdfs-kafka-consumer
 ```
 
 위의 과정들(Zookeeper & Kafka 컨테이너 올라감, Topic 생성, Producer 컨테이너 올라감)이 다 끝나면, Consumer 컨테이너를 올려봅니다. 
