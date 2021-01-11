@@ -1,0 +1,13 @@
+configMapGenerator:
+  - name: aws-s3-configmap
+    literals:
+      - aws_default_region=(AWS Region)
+      - aws_bucket_name=(S3 Bucket Name)
+      # For S3 Compatible Storage (If you don't want, just leave it commented or set it 'None')
+      - s3_endpoint_name=None
+
+secretGenerator:
+  - name: aws-credentials
+    literals:
+      - aws_access_key_id=(Your AWS Access Key ID)
+      - aws_secret_access_key=(Your AWS Secret Access Key)

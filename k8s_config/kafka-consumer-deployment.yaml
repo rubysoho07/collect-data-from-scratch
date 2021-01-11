@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-consumer-deployment
+  labels:
+    app: kafka-consumer
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: kafka-consumer
+  template:
+    metadata:
+      labels:
+        app: kafka-consumer
+    spec:
+      containers:
+        - name: kfk-prdc
+          image: "hahafree12/cdfs-kafka-consumer"
+          env:
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: aws-credentials
+                  key: aws_access_key_id
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: aws-credentials
+                  key: aws_secret_access_key
+            - name: AWS_DEFAULT_REGION
+              valueFrom:
+                configMapKeyRef:
+                  name: aws-s3-configmap
+                  key: aws_default_region
+            - name: S3_BUCKET_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: aws-s3-configmap
+                  key: aws_bucket_name
+            - name: S3_ENDPOINT
+              valueFrom:
+                configMapKeyRef:
+                  name: aws-s3-configmap
+                  key: s3_endpoint_name
+            
+            
