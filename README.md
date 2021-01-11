@@ -274,6 +274,30 @@ curl -X POST (URL of LB managed by Ingress Controller)/upload
 
 데이터가 정상적으로 생성되는 것을 확인할 수 있습니다. 
 
+# Consumer 올리기 
+
+먼저 환경변수 설정을 위해 ./kustomization/kustomization.yaml 파일을 편집합니다. 
+
+Access Key와 같은 값들을 적절히 수정 후, 다음 명령을 실행합니다. 
+
+```shell
+kubectl --kubeconfig $KUBE_CONFIG apply -k kustomization/ 
+configmap/aws-s3-configmap-(Random Value) created
+secret/aws-credentials-(Random Value) unchanged
+```
+
+그리고 kafka-consumer-deployment.yaml 파일의 다음 부분을 변경합니다. 
+
+* aws-credentials -> aws-credentials-(Random Value)
+* aws-s3-configmap -> aws-s3-configmap-(Random Value)
+
+마지막으로 Consumer를 배포합니다. 
+
+```shell
+kubectl --kubeconfig $KUBE_CONFIG apply -f k8s_config/kafka-consumer-deployment.yaml
+```
+
+이제 Producer가 10번 이상 데이터를 생성하면, S3 버킷에 데이터를 올리게 됩니다.
 ## 참고자료
 
 ### Kubernetes 문서
@@ -287,3 +311,4 @@ curl -X POST (URL of LB managed by Ingress Controller)/upload
 * [시크릿(Secret)](https://kubernetes.io/ko/docs/concepts/configuration/secret/)
 * [컨피그맵(ConfigMap)](https://kubernetes.io/ko/docs/concepts/configuration/configmap/)
 * [인그레스(Ingress)](https://kubernetes.io/ko/docs/concepts/services-networking/ingress/)
+* [Kustomize를 이용한 쿠버네티스 오브젝트의 선언형 관리](https://kubernetes.io/ko/docs/tasks/manage-kubernetes-objects/kustomization/)
