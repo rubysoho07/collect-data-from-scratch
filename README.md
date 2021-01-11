@@ -133,6 +133,7 @@ kubectl apply -f kafka-service.yaml
 #### 정상 작동 확인하기
 
 * (참고) 아래에서 설명하는 내용은 minikube에서 돌리기에 부족할 수 있습니다. 참고로 보시기를 권장하며, 실제로 테스트 하시려면 Kubernetes 클러스터를 올려서 테스트 해 보시기 바랍니다. (비용이 부과될 수 있음)
+* Kubernetes 설정 파일을 받았다면, 설정 파일의 경로를 `KUBE_CONFIG` 환경변수로 지정 후(`export KUBE_CONFIG=<PATH>`), kubectl에 `--kubeconfig $KUBE_CONFIG` 옵션을 붙여서 아래 내용을 실행하여야 합니다. 
 
 먼저 Kafka Pod 중 하나를 선택해서 Topic을 만들고, Producer 역할로서 메시지를 보내 봅니다.
 
@@ -233,6 +234,46 @@ $ cat result_file.txt
 ```
 
 데이터가 들어와 있는 것을 확인할 수 있습니다.
+
+# NGINX 인그레스(Ingress) 설정하기
+
+## Controller 설치하기
+
+[NGINX Ingress Controller - Installation Guide](https://kubernetes.github.io/ingress-nginx/deploy/) 문서를 참조하여 설치합니다. 
+
+```
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v0.43.0/deploy/static/provider/cloud/deploy.yaml
+```
+
+## Ingress 리소스 설정하기
+
+먼저 Kafka Producer 서비스를 설정하고 Kafka Ingress 리소스를 설정합니다. 
+
+```shell script
+kubectl --kubeconfig $KUBE_CONFIG apply -f k8s_config/kafka-producer-service.yaml
+kubectl --kubeconfig $KUBE_CONFIG apply -f k8s_config/kafka-producer-ingress.yaml
+```
+
+외부에서 접속할 경로를 알아보기 위해, 다음 명령으로 주소를 확인합니다. 
+```shell script
+kubectl --kubeconfig $KUBE_CONFIG get ingress
+NAME                          HOSTS   ADDRESS                                     PORTS   AGE
+cdfs-kafka-producer-ingress   *       (URL of LB managed by Ingress Controller)   80      13s
+```
+
+정리해 보면 다음과 같이 트래픽이 들어가게 됩니다. 
+
+> Ingress Controller가 생성한 Load Balancer:80 -> Service(80 포트 -> 5000 포트) -> Service 내 Pod (5000 포트)
+
+이제 모든 설정이 되었으니, 데이터를 생성해 보겠습니다. 
+
+```
+curl -X POST (URL of LB managed by Ingress Controller)/upload
+{"eventTime":"2021-01-11T12:28:55.985","message":"Random Message: 289"}
+```
+
+데이터가 정상적으로 생성되는 것을 확인할 수 있습니다. 
+
 ## 참고자료
 
 ### Kubernetes 문서
@@ -245,3 +286,4 @@ $ cat result_file.txt
 * [컨테이너를 위한 환경 변수 정의하기](https://kubernetes.io/ko/docs/tasks/inject-data-application/define-environment-variable-container/)
 * [시크릿(Secret)](https://kubernetes.io/ko/docs/concepts/configuration/secret/)
 * [컨피그맵(ConfigMap)](https://kubernetes.io/ko/docs/concepts/configuration/configmap/)
+* [인그레스(Ingress)](https://kubernetes.io/ko/docs/concepts/services-networking/ingress/)
