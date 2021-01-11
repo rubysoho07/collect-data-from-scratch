@@ -298,6 +298,15 @@ kubectl --kubeconfig $KUBE_CONFIG apply -f k8s_config/kafka-consumer-deployment.
 ```
 
 이제 Producer가 10번 이상 데이터를 생성하면, S3 버킷에 데이터를 올리게 됩니다.
+
+## 클러스터 내 리소스 정리하기
+
+다음과 같이 실행 중인 리소스를 정리해 줍니다. 
+
+```shell
+kubectl --kubeconfig $KUBE_CONFIG delete -f k8s_config/
+```
+
 ## 참고자료
 
 ### Kubernetes 문서
