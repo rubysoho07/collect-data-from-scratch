@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka-producer-service
+spec:
+  selector:
+    app: kafka-producer
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000
+      name: gunicorn
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-producer-deployment
+  labels:
+    app: kafka-producer
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: kafka-producer
+  template:
+    metadata:
+      labels:
+        app: kafka-producer
+    spec:
+      containers:
+        - name: kfk-prdc
+          image: "hahafree12/cdfs-kafka-producer"
+          ports:
+            - containerPort: 5000
+              name: gunicorn
