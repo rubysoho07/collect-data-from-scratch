@@ -37,7 +37,7 @@ def get_kafka_consumer():
                 "kafka-2.kafka.default.svc.cluster.local:9092" 
             ]
     
-    return KafkaConsumer(bootstrap_servers=bootstrap_servers)
+    return KafkaConsumer(bootstrap_servers=bootstrap_servers, group_id='test-topic-group')
 
 if __name__ == "__main__":
 
