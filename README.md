@@ -305,6 +305,7 @@ kubectl --kubeconfig $KUBE_CONFIG apply -f k8s_config/kafka-consumer-deployment.
 
 ```shell
 kubectl --kubeconfig $KUBE_CONFIG delete -f k8s_config/
+kubectl --kubeconfig $KUBE_CONFIG delete -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v0.43.0/deploy/static/provider/cloud/deploy.yaml
 ```
 
 ## 참고자료
