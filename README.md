@@ -310,15 +310,18 @@ kubectl --kubeconfig $KUBE_CONFIG delete -f https://raw.githubusercontent.com/ku
 
 ## 참고자료
 
-### Kubernetes 문서
+### Kubernetes Concepts
 
 * [서비스](https://kubernetes.io/ko/docs/concepts/services-networking/service/)
 * [디플로이먼트(Deployment)](https://kubernetes.io/ko/docs/concepts/workloads/controllers/deployment/)
 * [스테이트풀셋(StatefulSet)](https://kubernetes.io/ko/docs/concepts/workloads/controllers/statefulset/)
-* [분산 시스템 코디네이터 ZooKeeper 실행하기](https://kubernetes.io/ko/docs/tutorials/stateful-application/zookeeper/)
-* [초기화 컨테이너(Init Containers) 디버그하기](https://kubernetes.io/ko/docs/tasks/debug-application-cluster/debug-init-containers/)
-* [컨테이너를 위한 환경 변수 정의하기](https://kubernetes.io/ko/docs/tasks/inject-data-application/define-environment-variable-container/)
 * [시크릿(Secret)](https://kubernetes.io/ko/docs/concepts/configuration/secret/)
 * [컨피그맵(ConfigMap)](https://kubernetes.io/ko/docs/concepts/configuration/configmap/)
 * [인그레스(Ingress)](https://kubernetes.io/ko/docs/concepts/services-networking/ingress/)
+
+### Kubernetes Tutorials & Tasks
+
+* [분산 시스템 코디네이터 ZooKeeper 실행하기](https://kubernetes.io/ko/docs/tutorials/stateful-application/zookeeper/)
+* [초기화 컨테이너(Init Containers) 디버그하기](https://kubernetes.io/ko/docs/tasks/debug-application-cluster/debug-init-containers/)
+* [컨테이너를 위한 환경 변수 정의하기](https://kubernetes.io/ko/docs/tasks/inject-data-application/define-environment-variable-container/)
 * [Kustomize를 이용한 쿠버네티스 오브젝트의 선언형 관리](https://kubernetes.io/ko/docs/tasks/manage-kubernetes-objects/kustomization/)
