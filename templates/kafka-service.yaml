@@ -21,7 +21,7 @@ spec:
     matchLabels:
       app: kafka
   serviceName: kafka
-  replicas: 3
+  replicas: {{ .Values.kafka.replicas }}
   updateStrategy:
     type: RollingUpdate
   podManagementPolicy: OrderedReady

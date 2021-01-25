@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aws-s3-configmap
+data:
+  aws_default_region: {{ .Values.aws_default_region }}
+  s3_bucket_name: {{ .Values.s3_bucket_name }}
+  s3_endpoint_name: {{ .Values.s3_endpoint_name | default "None" | quote }}

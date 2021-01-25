@@ -18,7 +18,7 @@ metadata:
   labels:
     app: kafka-producer
 spec:
-  replicas: 3
+  replicas: {{ .Values.producer.replicas }}
   selector:
     matchLabels:
       app: kafka-producer

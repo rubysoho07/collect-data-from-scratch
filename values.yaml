@@ -1,0 +1,11 @@
+zookeeper:
+  replicas: 3
+
+kafka:
+  replicas: 3
+
+producer:
+  replicas: 3
+
+consumer:
+  replicas: 3

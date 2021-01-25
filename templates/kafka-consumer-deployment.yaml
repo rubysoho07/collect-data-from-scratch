@@ -5,7 +5,7 @@ metadata:
   labels:
     app: kafka-consumer
 spec:
-  replicas: 3
+  replicas: {{ .Values.consumer.replicas }}
   selector:
     matchLabels:
       app: kafka-consumer
@@ -37,7 +37,7 @@ spec:
               valueFrom:
                 configMapKeyRef:
                   name: aws-s3-configmap
-                  key: aws_bucket_name
+                  key: s3_bucket_name
             - name: S3_ENDPOINT
               valueFrom:
                 configMapKeyRef:

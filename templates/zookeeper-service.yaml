@@ -25,7 +25,7 @@ spec:
     matchLabels:
       app: zookeeper
   serviceName: zookeeper
-  replicas: 3
+  replicas: {{ .Values.zookeeper.replicas | default 3 }}
   updateStrategy:
     type: RollingUpdate
   podManagementPolicy: OrderedReady
