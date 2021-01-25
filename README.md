@@ -308,6 +308,56 @@ kubectl --kubeconfig $KUBE_CONFIG delete -f k8s_config/
 kubectl --kubeconfig $KUBE_CONFIG delete -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v0.43.0/deploy/static/provider/cloud/deploy.yaml
 ```
 
+## Helm Chart로 설치하기
+
+먼저 nginx-ingress를 설치해 줍니다. ([출처](https://kubernetes.github.io/ingress-nginx/deploy/#using-helm))
+
+```shell
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo update
+
+helm install ingress-nginx ingress-nginx/ingress-nginx
+```
+
+그리고 Helm Chart를 설치해 줍니다. 
+
+```shell
+helm install --set aws_access_key_id=(AWS Access Key) \
+    --set aws_secret_access_key=(AWS Secret Access Key) \
+    --set aws_default_region=(AWS Region Name: e.g. "ap-northeast-2" for Seoul Region) \
+    --set s3_bucket_name=(S3 Bucket Name) \
+    cdfs-test .
+```
+
+모든 Pod이 다 올라올 때까지 기다립니다. (Consumer나 Kafka Pod이 중간에 실패해도 ZooKeeper가 다 올라오면 정상적으로 실행됩니다.)
+
+```shell
+kubectl get pods                                              
+NAME                                        READY   STATUS    RESTARTS   AGE
+ingress-nginx-controller-79b9595f96-p247s   1/1     Running   0          60m
+kafka-0                                     1/1     Running   2          3m27s
+kafka-1                                     1/1     Running   0          2m18s
+kafka-2                                     1/1     Running   0          92s
+kafka-consumer-deployment-7cd9fb78d-9h2ns   1/1     Running   5          3m27s
+kafka-consumer-deployment-7cd9fb78d-mqpcd   1/1     Running   5          3m27s
+kafka-consumer-deployment-7cd9fb78d-qjwmg   1/1     Running   5          3m27s
+kafka-producer-deployment-cddb4b65-6wfjp    1/1     Running   0          3m27s
+kafka-producer-deployment-cddb4b65-7dk2j    1/1     Running   0          3m27s
+kafka-producer-deployment-cddb4b65-ktz8g    1/1     Running   0          3m27s
+zookeeper-0                                 1/1     Running   0          3m27s
+zookeeper-1                                 1/1     Running   0          2m51s
+zookeeper-2                                 1/1     Running   0          2m14s
+```
+
+## Helm Chart 삭제하기
+
+다음 명령으로 삭제합니다. 
+
+```shell
+helm uninstall cdfs-test
+helm uninstall ingress-nginx
+```
+
 ## 참고자료
 
 ### Kubernetes Concepts
