@@ -28,6 +28,7 @@ def upload():
 
         message = {
             "message": f"Random Message: {randint(1, 1000)}",
+            "username": f"user-{randint(1, 1000):04d}",
             "eventTime": datetime.now().isoformat(timespec="milliseconds")
         }
 
