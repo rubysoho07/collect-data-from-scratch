@@ -59,7 +59,7 @@ if __name__ == "__main__":
         data = data + msg.value + b'\n'
         count = count + 1
 
-        if count >= 10:
+        if count >= 1000:
             response = s3.put_object(
                 Bucket=bucket_name, 
                 Key=str(uuid.uuid4()),
