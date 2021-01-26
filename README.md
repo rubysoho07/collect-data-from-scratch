@@ -310,16 +310,7 @@ kubectl --kubeconfig $KUBE_CONFIG delete -f https://raw.githubusercontent.com/ku
 
 ## Helm Chart로 설치하기
 
-먼저 nginx-ingress를 설치해 줍니다. ([출처](https://kubernetes.github.io/ingress-nginx/deploy/#using-helm))
-
-```shell
-helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
-helm repo update
-
-helm install ingress-nginx ingress-nginx/ingress-nginx
-```
-
-그리고 Helm Chart를 설치해 줍니다. 
+다음 명령으로 Helm Chart를 설치해 줍니다. 
 
 ```shell
 helm install --set aws_access_key_id=(AWS Access Key) \
@@ -328,6 +319,8 @@ helm install --set aws_access_key_id=(AWS Access Key) \
     --set s3_bucket_name=(S3 Bucket Name) \
     cdfs-test .
 ```
+
+만약 ingress-nginx가 설치되어 있지 않다면 [이 문서](https://kubernetes.github.io/ingress-nginx/deploy/#using-helm)를 참고하여 설치합니다. 
 
 모든 Pod이 다 올라올 때까지 기다립니다. (Consumer나 Kafka Pod이 중간에 실패해도 ZooKeeper가 다 올라오면 정상적으로 실행됩니다.)
 
@@ -355,7 +348,6 @@ zookeeper-2                                 1/1     Running   0          2m14s
 
 ```shell
 helm uninstall cdfs-test
-helm uninstall ingress-nginx
 ```
 
 ## 참고자료
