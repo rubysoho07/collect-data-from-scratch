@@ -1,5 +1,6 @@
 import os
 import json
+import logging
 
 from datetime import datetime
 from random import randint
@@ -10,6 +11,16 @@ from flask import request
 from kafka import KafkaProducer
 
 app = Flask(__name__)
+
+logger = logging.getLogger("KAFKA_PRODUCER")
+logger.setLevel(logging.INFO)
+
+handler = logging.StreamHandler()
+formatter = logging.Formatter('%(asctime)s [%(name)s] [%(levelname)s] %(message)s')
+
+handler.setFormatter(formatter)
+logger.addHandler(handler)
+
 
 @app.route('/upload', methods=['POST'])
 def upload():
@@ -25,6 +36,7 @@ def upload():
             ]
         
         producer = KafkaProducer(bootstrap_servers=bootstrap_servers)
+        logger.info("Connected to Kafka")
 
         message = {
             "message": f"Random Message: {randint(1, 1000)}",
@@ -32,7 +44,9 @@ def upload():
             "eventTime": datetime.now().isoformat(timespec="milliseconds")
         }
 
+        logger.info(f"Message prepared: {message['message']}")
         producer.send("test-topic", json.dumps(message, ensure_ascii=False).encode())
+        logger.info(f"Sent message to Kafka: {message['message']}")
 
         return message
     else:
