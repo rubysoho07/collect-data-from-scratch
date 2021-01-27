@@ -313,6 +313,7 @@ kubectl --kubeconfig $KUBE_CONFIG delete -f https://raw.githubusercontent.com/ku
 다음 명령으로 Helm Chart를 설치해 줍니다. 
 
 ```shell
+helm dependency update
 helm install --set aws_access_key_id=(AWS Access Key) \
     --set aws_secret_access_key=(AWS Secret Access Key) \
     --set aws_default_region=(AWS Region Name: e.g. "ap-northeast-2" for Seoul Region) \
