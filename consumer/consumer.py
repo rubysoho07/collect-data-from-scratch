@@ -1,5 +1,6 @@
 import os
 import uuid
+import logging
 
 import boto3
 
@@ -7,6 +8,18 @@ from kafka import KafkaConsumer
 
 BUCKET_NAME = os.environ.get('S3_BUCKET_NAME')
 MAX_RECORDS_TO_STORE = 10
+
+
+# Logger Configuration
+logger = logging.getLogger("KAFKA_CONSUMER")
+logger.setLevel(logging.INFO)
+
+handler = logging.StreamHandler()
+formatter = logging.Formatter('%(asctime)s [%(name)s] [%(levelname)s] %(message)s')
+
+handler.setFormatter(formatter)
+logger.addHandler(handler)
+
 
 
 def _validate_env(value):
@@ -64,6 +77,7 @@ if __name__ == "__main__":
         raise ValueError('Bucket name is None')
 
     consumer = get_kafka_consumer()
+    logger.info("Connected to Kafka")
 
     consumer.subscribe(['test-topic'])
 
@@ -86,9 +100,9 @@ if __name__ == "__main__":
         """
 
         if len(messages) == 0 and count > 0:
-            print("Storing remained data...")
+            logger.info("Storing remained data...")
             response = store_data(s3, b'\n'.join(data))
-            print(response)
+            logger.info(response)
 
             count = 0
             data.clear()
@@ -100,7 +114,7 @@ if __name__ == "__main__":
 
                 if count >= MAX_RECORDS_TO_STORE:
                     response = store_data(s3, b'\n'.join(data))
-                    print(response)
+                    logger.info(response)
 
                     count = 0
                     data.clear()
