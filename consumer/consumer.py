@@ -5,6 +5,10 @@ import boto3
 
 from kafka import KafkaConsumer
 
+BUCKET_NAME = os.environ.get('S3_BUCKET_NAME')
+MAX_RECORDS_TO_STORE = 10
+
+
 def _validate_env(value):
     """ Validation of environment variable. If valid, return True """
 
@@ -39,6 +43,17 @@ def get_kafka_consumer():
     
     return KafkaConsumer(bootstrap_servers=bootstrap_servers, group_id='test-topic-group')
 
+
+def store_data(s3_client, body: bytes) -> dict:
+
+    response = s3_client.put_object(
+        Bucket=BUCKET_NAME, Key=str(uuid.uuid4()),
+        Body=body
+    )
+
+    return response
+
+
 if __name__ == "__main__":
 
     s3 = get_s3_client()
@@ -53,20 +68,40 @@ if __name__ == "__main__":
     consumer.subscribe(['test-topic'])
 
     count = 0
-    data = b''
+    data = []
 
-    for msg in consumer:
-        data = data + msg.value + b'\n'
-        count = count + 1
+    while True:
+        messages = consumer.poll(timeout_ms=30000)
 
-        if count >= 1000:
-            response = s3.put_object(
-                Bucket=bucket_name, 
-                Key=str(uuid.uuid4()),
-                Body=data
-            )
+        # Example of 'messages'
+        """
+        {
+            TopicPartition(topic='test-topic', partition=0): [
+                ConsumerRecord(topic='test-topic', partition=0, offset=21, timestamp=1611839857976, 
+                timestamp_type=0, key=None, 
+                value=b'{"message": "Random Message: 420", "username": "user-0377", "eventTime": "2021-01-28T13:17:37.976"}', 
+                headers=[], checksum=None, serialized_key_size=-1, serialized_value_size=99, serialized_header_size=-1)
+            ]
+        }
+        """
 
+        if len(messages) == 0 and count > 0:
+            print("Storing remained data...")
+            response = store_data(s3, b'\n'.join(data))
             print(response)
+
             count = 0
-            data = b''
+            data.clear()
+
+        for topic_partition in messages:
+            for consumer_record in messages[topic_partition]:
+                data.append(consumer_record.value)
+                count += 1
+
+                if count >= MAX_RECORDS_TO_STORE:
+                    response = store_data(s3, b'\n'.join(data))
+                    print(response)
+
+                    count = 0
+                    data.clear()
 
