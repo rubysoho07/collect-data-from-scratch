@@ -1,4 +1,5 @@
 # From Source: https://github.com/fluent/fluentd-kubernetes-daemonset/blob/master/fluentd-daemonset-elasticsearch.yaml
+{{ if eq .Values.monitoring.enabled true }}
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
@@ -49,3 +50,4 @@ spec:
       - name: varlibdockercontainers
         hostPath:
           path: /var/lib/docker/containers
+{{ end }}

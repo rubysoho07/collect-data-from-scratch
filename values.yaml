@@ -9,3 +9,6 @@ producer:
 
 consumer:
   replicas: 3
+
+monitoring:
+  enabled: false
