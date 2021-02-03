@@ -15,7 +15,7 @@ spec:
         app: kafka-consumer
     spec:
       containers:
-        - name: kfk-prdc
+        - name: kfk-cnsmr
           image: "hahafree12/cdfs-kafka-consumer"
           env:
             - name: AWS_ACCESS_KEY_ID
@@ -43,5 +43,6 @@ spec:
                 configMapKeyRef:
                   name: aws-s3-configmap
                   key: s3_endpoint_name
-            
+            - name: MAX_RECORDS_TO_STORE
+              value: {{ .Values.consumer.max_records_to_store | default "10" | quote }}
             

@@ -7,7 +7,7 @@ import boto3
 from kafka import KafkaConsumer
 
 BUCKET_NAME = os.environ.get('S3_BUCKET_NAME')
-MAX_RECORDS_TO_STORE = 10
+MAX_RECORDS_TO_STORE = int(os.environ.get('MAX_RECORDS_TO_STORE', '10'))
 
 
 # Logger Configuration
