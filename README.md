@@ -368,3 +368,11 @@ helm uninstall cdfs-test
 * [초기화 컨테이너(Init Containers) 디버그하기](https://kubernetes.io/ko/docs/tasks/debug-application-cluster/debug-init-containers/)
 * [컨테이너를 위한 환경 변수 정의하기](https://kubernetes.io/ko/docs/tasks/inject-data-application/define-environment-variable-container/)
 * [Kustomize를 이용한 쿠버네티스 오브젝트의 선언형 관리](https://kubernetes.io/ko/docs/tasks/manage-kubernetes-objects/kustomization/)
+
+### Logging & Monitoring
+
+* [Kubernetes Documentation - 로깅 아키텍처](https://kubernetes.io/ko/docs/concepts/cluster-administration/logging/)
+* [Google Cloud Documentation - Fluentd를 사용한 Google Kubernetes Engine의 Cloud Logging 로그 맞춤설정](https://cloud.google.com/solutions/customizing-stackdriver-logs-fluentd?hl=ko)
+* [Fluentd Documentation - Kubernetes](https://docs.fluentd.org/container-deployment/kubernetes)
+* [Fluentd Documentation - Kubernetes Fluentd](https://docs.fluentd.org/v/0.12/articles/kubernetes-fluentd)
+* [Fluentd Daemonset for Kubernetes](https://github.com/fluent/fluentd-kubernetes-daemonset)
