@@ -6,23 +6,6 @@
 
 전체 과정은 [Wiki](https://github.com/rubysoho07/collect-data-from-scratch/wiki)를 참고해 주세요.
 
-## Kubernetes로 배포하기
-
-모든 설명은 minikube, kubectl이 설치되어 있음을 기준으로 합니다.
-
-### minikube 시작하기
-
-```shell script
-minikube start
-```
-
-### ZooKeeper 배포하기
-
-```shell script
-cd k8s_config
-kubectl apply -f zookeeper-service.yaml
-```
-
 #### 정상 작동 확인하기
 
 먼저 ZooKeeper가 동작 중인 Pod에 데이터를 써 봅니다.
@@ -212,29 +195,3 @@ zookeeper-2                                 1/1     Running   0          2m14s
 ```shell
 helm uninstall cdfs-test
 ```
-
-## 참고자료
-
-### Kubernetes Concepts
-
-* [서비스](https://kubernetes.io/ko/docs/concepts/services-networking/service/)
-* [디플로이먼트(Deployment)](https://kubernetes.io/ko/docs/concepts/workloads/controllers/deployment/)
-* [스테이트풀셋(StatefulSet)](https://kubernetes.io/ko/docs/concepts/workloads/controllers/statefulset/)
-* [시크릿(Secret)](https://kubernetes.io/ko/docs/concepts/configuration/secret/)
-* [컨피그맵(ConfigMap)](https://kubernetes.io/ko/docs/concepts/configuration/configmap/)
-* [인그레스(Ingress)](https://kubernetes.io/ko/docs/concepts/services-networking/ingress/)
-
-### Kubernetes Tutorials & Tasks
-
-* [분산 시스템 코디네이터 ZooKeeper 실행하기](https://kubernetes.io/ko/docs/tutorials/stateful-application/zookeeper/)
-* [초기화 컨테이너(Init Containers) 디버그하기](https://kubernetes.io/ko/docs/tasks/debug-application-cluster/debug-init-containers/)
-* [컨테이너를 위한 환경 변수 정의하기](https://kubernetes.io/ko/docs/tasks/inject-data-application/define-environment-variable-container/)
-* [Kustomize를 이용한 쿠버네티스 오브젝트의 선언형 관리](https://kubernetes.io/ko/docs/tasks/manage-kubernetes-objects/kustomization/)
-
-### Logging & Monitoring
-
-* [Kubernetes Documentation - 로깅 아키텍처](https://kubernetes.io/ko/docs/concepts/cluster-administration/logging/)
-* [Google Cloud Documentation - Fluentd를 사용한 Google Kubernetes Engine의 Cloud Logging 로그 맞춤설정](https://cloud.google.com/solutions/customizing-stackdriver-logs-fluentd?hl=ko)
-* [Fluentd Documentation - Kubernetes](https://docs.fluentd.org/container-deployment/kubernetes)
-* [Fluentd Documentation - Kubernetes Fluentd](https://docs.fluentd.org/v/0.12/articles/kubernetes-fluentd)
-* [Fluentd Daemonset for Kubernetes](https://github.com/fluent/fluentd-kubernetes-daemonset)
